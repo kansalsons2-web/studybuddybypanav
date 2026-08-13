@@ -197,7 +197,7 @@ function TestsPage() {
               {(["physics", "chemistry", "mathematics"] as const).map((k) => (
                 <div key={k} className="space-y-1.5">
                   <label className="text-xs font-medium text-muted-foreground">
-                    {k[0].toUpperCase() + k.slice(1)}
+                    {(k[0]?.toUpperCase() ?? "") + k.slice(1)}
                   </label>
                   <input
                     type="number"
