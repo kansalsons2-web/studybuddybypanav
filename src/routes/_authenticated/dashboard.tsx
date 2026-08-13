@@ -150,7 +150,7 @@ function DashboardPage() {
             })}
           </div>
           <div className="mt-2 flex justify-between text-[10px] text-muted-foreground">
-            <span>{new Date(series[0].date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+            <span>{new Date(series[0]?.date ?? today()).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
             <span>Today</span>
           </div>
         </div>
