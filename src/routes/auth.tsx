@@ -235,7 +235,3 @@ function GoogleIcon() {
     </svg>
   );
 }
-
-// Prevent the route generator from registering this as `/auth` twice if it
-// ever reorders — keep a stable default export guard.
-export const _routeGuard = redirect;
