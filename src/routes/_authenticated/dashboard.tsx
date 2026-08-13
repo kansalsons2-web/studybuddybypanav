@@ -242,7 +242,7 @@ function MiniLink({
 }) {
   return (
     <Link
-      to={to as "/analytics"}
+      to={to as "/dashboard"}
       className="flex items-center gap-3 rounded-xl border border-border bg-card/40 px-4 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent/40 hover:bg-accent/5"
     >
       <Icon className="size-4 text-accent" />
