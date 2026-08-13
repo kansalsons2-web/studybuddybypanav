@@ -14,7 +14,189 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      goals: {
+        Row: {
+          created_at: string
+          done: boolean
+          id: string
+          kind: string
+          name: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          done?: boolean
+          id?: string
+          kind?: string
+          name: string
+          subject?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          done?: boolean
+          id?: string
+          kind?: string
+          name?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          advanced_date: string
+          college: string
+          created_at: string
+          daily_target: number
+          id: string
+          mains_date: string
+          monthly_target: number
+          name: string
+          target_rank: string
+          updated_at: string
+          weekly_target: number
+        }
+        Insert: {
+          advanced_date?: string
+          college?: string
+          created_at?: string
+          daily_target?: number
+          id: string
+          mains_date?: string
+          monthly_target?: number
+          name?: string
+          target_rank?: string
+          updated_at?: string
+          weekly_target?: number
+        }
+        Update: {
+          advanced_date?: string
+          college?: string
+          created_at?: string
+          daily_target?: number
+          id?: string
+          mains_date?: string
+          monthly_target?: number
+          name?: string
+          target_rank?: string
+          updated_at?: string
+          weekly_target?: number
+        }
+        Relationships: []
+      }
+      study_sessions: {
+        Row: {
+          created_at: string
+          duration_minutes: number
+          id: string
+          study_date: string
+          study_type: string
+          subject: string
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          study_date?: string
+          study_type?: string
+          subject?: string
+          topic?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          study_date?: string
+          study_type?: string
+          subject?: string
+          topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          created_at: string
+          done: boolean
+          estimate_minutes: number
+          id: string
+          name: string
+          priority: string
+          subject: string
+          task_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          done?: boolean
+          estimate_minutes?: number
+          id?: string
+          name: string
+          priority?: string
+          subject?: string
+          task_date?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          done?: boolean
+          estimate_minutes?: number
+          id?: string
+          name?: string
+          priority?: string
+          subject?: string
+          task_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tests: {
+        Row: {
+          chemistry: number
+          created_at: string
+          id: string
+          mathematics: number
+          max_marks: number
+          name: string
+          physics: number
+          score: number
+          test_date: string
+          test_type: string
+          user_id: string
+        }
+        Insert: {
+          chemistry?: number
+          created_at?: string
+          id?: string
+          mathematics?: number
+          max_marks?: number
+          name: string
+          physics?: number
+          score?: number
+          test_date?: string
+          test_type?: string
+          user_id: string
+        }
+        Update: {
+          chemistry?: number
+          created_at?: string
+          id?: string
+          mathematics?: number
+          max_marks?: number
+          name?: string
+          physics?: number
+          score?: number
+          test_date?: string
+          test_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
