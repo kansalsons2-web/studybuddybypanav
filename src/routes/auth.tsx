@@ -44,17 +44,39 @@ function AuthPage() {
     setMsg(null);
     if (mode === "login") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setMsg({ kind: "err", text: error.message });
-      else navigate({ to: "/dashboard", replace: true });
+      if (error) {
+        setMsg({
+          kind: "err",
+          text:
+            error.message.toLowerCase().includes("invalid login")
+              ? "Wrong email or password. If you signed up with Google, use “Continue with Google” instead."
+              : error.message,
+        });
+      } else {
+        navigate({ to: "/dashboard", replace: true });
+      }
     } else {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: window.location.origin },
+        options: { emailRedirectTo: `${window.location.origin}/dashboard` },
       });
-      if (error) setMsg({ kind: "err", text: error.message });
-      else if (data.session) navigate({ to: "/dashboard", replace: true });
-      else setMsg({ kind: "ok", text: "Check your email to confirm your account, then sign in." });
+      if (error) {
+        setMsg({ kind: "err", text: error.message });
+      } else if (data.session) {
+        navigate({ to: "/dashboard", replace: true });
+      } else if (data.user && data.user.identities?.length === 0) {
+        setMode("login");
+        setMsg({
+          kind: "err",
+          text: "An account with this email already exists. Sign in instead (or use Google).",
+        });
+      } else {
+        setMsg({
+          kind: "ok",
+          text: "Account created — check your inbox for the confirmation link, then sign in.",
+        });
+      }
     }
     setBusy(false);
   }
@@ -62,9 +84,10 @@ function AuthPage() {
   async function handleMagic() {
     if (!email) return setMsg({ kind: "err", text: "Enter your email first." });
     setBusy(true);
+    setMsg(null);
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: window.location.origin },
+      options: { emailRedirectTo: `${window.location.origin}/dashboard` },
     });
     setMsg(
       error
@@ -73,6 +96,22 @@ function AuthPage() {
     );
     setBusy(false);
   }
+
+  async function handleReset() {
+    if (!email) return setMsg({ kind: "err", text: "Enter your email first." });
+    setBusy(true);
+    setMsg(null);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setMsg(
+      error
+        ? { kind: "err", text: error.message }
+        : { kind: "ok", text: "Password reset link sent — check your email." },
+    );
+    setBusy(false);
+  }
+
 
   async function handleGoogle() {
     const { lovable } = await import("@/integrations/lovable");
