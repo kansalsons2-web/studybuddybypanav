@@ -4,7 +4,6 @@ import {
   Outlet,
   redirect,
   useRouter,
-  useMatch,
 } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -20,7 +19,6 @@ import {
   Target,
   Timer,
 } from "lucide-react";
-import { useState } from "react";
 
 import { jeeQueryOptions } from "@/lib/jee-hooks";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,8 +57,9 @@ const MOBILE_NAV: NavItem[] = [
 ];
 
 function useIsActive(to: string) {
-  const match = useMatch({ to: to as "/dashboard", strict: false });
-  return !!match;
+  const router = useRouter();
+  const path = router.state.location.pathname;
+  return path === to || path.startsWith(to + "/");
 }
 
 function AuthenticatedShell() {
@@ -97,9 +96,7 @@ function AuthenticatedShell() {
         </nav>
 
         <div className="border-t border-sidebar-border p-3">
-          <div className="mb-2 truncate px-2 text-xs text-muted-foreground">
-            {user.email}
-          </div>
+          <div className="mb-2 truncate px-2 text-xs text-muted-foreground">{user.email}</div>
           <button
             onClick={handleSignOut}
             className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
