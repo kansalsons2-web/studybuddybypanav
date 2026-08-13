@@ -16,6 +16,7 @@ import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
+import { Route as AuthenticatedRoadmapRouteImport } from './routes/_authenticated/roadmap'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedTestsRouteImport } from './routes/_authenticated/tests'
 import { Route as AuthenticatedTimerRouteImport } from './routes/_authenticated/timer'
@@ -54,6 +55,11 @@ const AuthenticatedGoalsRoute = AuthenticatedGoalsRouteImport.update({
   path: '/goals',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRoadmapRoute = AuthenticatedRoadmapRouteImport.update({
+  id: '/roadmap',
+  path: '/roadmap',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/goals': typeof AuthenticatedGoalsRoute
+  '/roadmap': typeof AuthenticatedRoadmapRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/tests': typeof AuthenticatedTestsRoute
   '/timer': typeof AuthenticatedTimerRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/goals': typeof AuthenticatedGoalsRoute
+  '/roadmap': typeof AuthenticatedRoadmapRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/tests': typeof AuthenticatedTestsRoute
   '/timer': typeof AuthenticatedTimerRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/goals': typeof AuthenticatedGoalsRoute
+  '/_authenticated/roadmap': typeof AuthenticatedRoadmapRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/_authenticated/tests': typeof AuthenticatedTestsRoute
   '/_authenticated/timer': typeof AuthenticatedTimerRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/dashboard'
     | '/goals'
+    | '/roadmap'
     | '/tasks'
     | '/tests'
     | '/timer'
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/dashboard'
     | '/goals'
+    | '/roadmap'
     | '/tasks'
     | '/tests'
     | '/timer'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/_authenticated/calendar'
     | '/_authenticated/dashboard'
     | '/_authenticated/goals'
+    | '/_authenticated/roadmap'
     | '/_authenticated/tasks'
     | '/_authenticated/tests'
     | '/_authenticated/timer'
@@ -199,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGoalsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/roadmap': {
+      id: '/_authenticated/roadmap'
+      path: '/roadmap'
+      fullPath: '/roadmap'
+      preLoaderRoute: typeof AuthenticatedRoadmapRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tasks': {
       id: '/_authenticated/tasks'
       path: '/tasks'
@@ -228,6 +247,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedGoalsRoute: typeof AuthenticatedGoalsRoute
+  AuthenticatedRoadmapRoute: typeof AuthenticatedRoadmapRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedTestsRoute: typeof AuthenticatedTestsRoute
   AuthenticatedTimerRoute: typeof AuthenticatedTimerRoute
@@ -238,6 +258,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedGoalsRoute: AuthenticatedGoalsRoute,
+  AuthenticatedRoadmapRoute: AuthenticatedRoadmapRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedTestsRoute: AuthenticatedTestsRoute,
   AuthenticatedTimerRoute: AuthenticatedTimerRoute,
