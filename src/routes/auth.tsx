@@ -84,16 +84,16 @@ function AuthPage() {
       {/* Brand panel */}
       <div className="mission-gradient relative hidden flex-col justify-between overflow-hidden p-10 lg:flex">
         <div className="gold-glow pointer-events-none absolute -right-24 top-1/4 h-72 w-72 rounded-full opacity-40 blur-3xl" />
-        <Link to="/" className="font-display text-xl font-bold text-primary-foreground">
+        <Link to="/" className="font-display text-xl font-bold text-foreground">
           JEE Command Center
         </Link>
         <div className="relative">
-          <h2 className="font-display text-4xl font-bold leading-tight text-primary-foreground">
+          <h2 className="font-display text-4xl font-bold leading-tight text-foreground">
             Engineer your rank,
             <br />
             one focused day at a time.
           </h2>
-          <p className="mt-4 max-w-sm text-sm text-primary-foreground/70">
+          <p className="mt-4 max-w-sm text-sm text-foreground/70">
             Track every study session, hit daily targets, and visualize your march toward an IIT.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
@@ -103,7 +103,7 @@ function AuthPage() {
             <Feature icon={BookOpen} title="Subject analytics" />
           </div>
         </div>
-        <p className="text-xs text-primary-foreground/50">Built for serious JEE aspirants.</p>
+        <p className="text-xs text-foreground/50">Built for serious JEE aspirants.</p>
       </div>
 
       {/* Form panel */}
@@ -206,9 +206,9 @@ function AuthPage() {
 
 function Feature({ icon: Icon, title }: { icon: typeof Timer; title: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 px-3 py-2">
-      <Icon className="size-4 text-primary-foreground/80" />
-      <span className="text-xs font-medium text-primary-foreground/80">{title}</span>
+    <div className="flex items-center gap-2 rounded-xl border border-foreground/15 bg-foreground/5 px-3 py-2">
+      <Icon className="size-4 text-foreground/80" />
+      <span className="text-xs font-medium text-foreground/80">{title}</span>
     </div>
   );
 }

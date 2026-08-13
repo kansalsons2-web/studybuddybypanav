@@ -44,11 +44,11 @@ function LandingPage() {
 
       <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-6">
         <header className="flex items-center justify-between">
-          <span className="font-display text-lg font-bold text-primary-foreground">
+          <span className="font-display text-lg font-bold text-foreground">
             JEE Command Center
           </span>
           <Link to="/auth">
-            <Button variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10">
+            <Button variant="ghost" className="text-foreground hover:bg-foreground/10">
               Sign in
             </Button>
           </Link>
@@ -56,15 +56,15 @@ function LandingPage() {
 
         <main className="flex flex-1 flex-col justify-center py-16">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/5 px-3 py-1 text-xs font-medium text-primary-foreground/80">
+            <span className="inline-flex items-center gap-2 rounded-full border border-foreground/20 bg-foreground/5 px-3 py-1 text-xs font-medium text-foreground/80">
               <Flame className="size-3.5 text-primary" /> Built for serious JEE aspirants
             </span>
-            <h1 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-primary-foreground sm:text-6xl">
+            <h1 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl">
               Engineer your rank.
               <br />
               <span className="text-primary">One focused day</span> at a time.
             </h1>
-            <p className="mt-5 max-w-lg text-base text-primary-foreground/70 sm:text-lg">
+            <p className="mt-5 max-w-lg text-base text-foreground/70 sm:text-lg">
               A mission control for your JEE prep — track every study session, hit daily targets,
               build streaks, and watch your progress add up to an IIT.
             </p>
@@ -78,7 +78,7 @@ function LandingPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="h-12 border-primary-foreground/20 bg-primary-foreground/5 px-6 text-base text-primary-foreground hover:bg-primary-foreground/10"
+                  className="h-12 border-foreground/20 bg-foreground/5 px-6 text-base text-foreground hover:bg-foreground/10"
                 >
                   Sign in
                 </Button>
@@ -96,7 +96,7 @@ function LandingPage() {
           </div>
         </main>
 
-        <footer className="py-6 text-xs text-primary-foreground/40">
+        <footer className="py-6 text-xs text-foreground/40">
           Your data stays yours. Secured with row-level isolation.
         </footer>
       </div>
@@ -106,9 +106,9 @@ function LandingPage() {
 
 function Feat({ icon: Icon, label }: { icon: typeof Timer; label: string }) {
   return (
-    <div className="flex flex-col items-center gap-2 rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 px-3 py-4 text-center">
-      <Icon className="size-5 text-primary-foreground/80" />
-      <span className="text-[11px] font-medium text-primary-foreground/70">{label}</span>
+    <div className="flex flex-col items-center gap-2 rounded-2xl border border-foreground/10 bg-foreground/5 px-3 py-4 text-center">
+      <Icon className="size-5 text-foreground/80" />
+      <span className="text-[11px] font-medium text-foreground/70">{label}</span>
     </div>
   );
 }

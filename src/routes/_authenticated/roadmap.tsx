@@ -118,9 +118,9 @@ function Checkpoint({
 }) {
   return (
     <div className="text-center">
-      <Icon className="mx-auto size-5 text-primary-foreground/70" />
-      <div className="mt-1 font-display text-lg font-bold text-primary-foreground">{value}</div>
-      <div className="text-[10px] uppercase tracking-wider text-primary-foreground/50">{label}</div>
+      <Icon className="mx-auto size-5 text-foreground/70" />
+      <div className="mt-1 font-display text-lg font-bold text-foreground">{value}</div>
+      <div className="text-[10px] uppercase tracking-wider text-foreground/50">{label}</div>
     </div>
   );
 }

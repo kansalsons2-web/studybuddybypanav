@@ -115,10 +115,10 @@ function TimerPage() {
           <div className="mission-gradient relative overflow-hidden rounded-2xl p-8 text-center">
             <div className="gold-glow pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full opacity-30 blur-3xl" />
             <div className="relative">
-              <div className="font-display text-6xl font-bold tabular-nums text-primary-foreground sm:text-7xl">
+              <div className="font-display text-6xl font-bold tabular-nums text-foreground sm:text-7xl">
                 {clock}
               </div>
-              <div className="mt-2 text-sm text-primary-foreground/60">
+              <div className="mt-2 text-sm text-foreground/60">
                 {running ? "Recording…" : "Ready"}
               </div>
               <div className="mt-6 flex justify-center gap-3">

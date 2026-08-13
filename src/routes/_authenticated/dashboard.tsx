@@ -76,13 +76,13 @@ function DashboardPage() {
         <div className="gold-glow pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full opacity-30 blur-3xl" />
         <div className="relative flex flex-wrap items-center justify-between gap-4">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground/70">
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-foreground/70">
               Mission countdown
             </div>
-            <div className="mt-1 font-display text-3xl font-bold text-primary-foreground">
+            <div className="mt-1 font-display text-3xl font-bold text-foreground">
               JEE Main in {mainsDays} days
             </div>
-            <div className="text-sm text-primary-foreground/60">
+            <div className="text-sm text-foreground/60">
               JEE Advanced in {advDays} days · Target {profile.target_rank}, {profile.college}
             </div>
           </div>
@@ -225,8 +225,8 @@ function DashboardPage() {
 function Countdown({ n, label }: { n: number; label: string }) {
   return (
     <div className="text-center">
-      <div className="font-display text-3xl font-bold tabular-nums text-primary-foreground">{n}</div>
-      <div className="text-[10px] uppercase tracking-wider text-primary-foreground/60">days {label}</div>
+      <div className="font-display text-3xl font-bold tabular-nums text-foreground">{n}</div>
+      <div className="text-[10px] uppercase tracking-wider text-foreground/60">days {label}</div>
     </div>
   );
 }
