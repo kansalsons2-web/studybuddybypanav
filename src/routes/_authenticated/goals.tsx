@@ -181,7 +181,7 @@ function GoalColumn({
   title: string;
   tone: "teal" | "gold";
   items: { id: string; name: string; subject: string; done: boolean }[];
-  onToggle: (g: { id: string }) => void;
+  onToggle: (g: { id: string; done: boolean }) => void;
   onDelete: (g: { id: string }) => void;
   progress: number;
   total: number;
