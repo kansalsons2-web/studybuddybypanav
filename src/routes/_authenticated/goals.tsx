@@ -134,7 +134,7 @@ function GoalsPage() {
                   <SelectContent>
                     {GOAL_KINDS.map((x) => (
                       <SelectItem key={x} value={x}>
-                        {x[0].toUpperCase() + x.slice(1)}
+                        {(x[0]?.toUpperCase() ?? "") + x.slice(1)}
                       </SelectItem>
                     ))}
                   </SelectContent>
