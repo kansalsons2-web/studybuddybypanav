@@ -204,6 +204,18 @@ function AuthPage() {
             </Button>
           </form>
 
+          {mode === "login" && (
+            <button
+              type="button"
+              onClick={handleReset}
+              disabled={busy}
+              className="mt-3 text-xs text-muted-foreground hover:text-accent hover:underline"
+            >
+              Forgot your password?
+            </button>
+          )}
+
+
           <div className="my-4 flex items-center gap-3 text-[11px] text-muted-foreground">
             <span className="h-px flex-1 bg-border" /> OR <span className="h-px flex-1 bg-border" />
           </div>
