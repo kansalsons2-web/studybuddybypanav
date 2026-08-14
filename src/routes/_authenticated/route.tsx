@@ -13,6 +13,7 @@ import {
   LayoutDashboard,
   ListTodo,
   LogOut,
+  Sparkles,
   Map,
   type LucideIcon,
   Settings,
@@ -45,6 +46,7 @@ const NAV: NavItem[] = [
   { to: "/calendar", label: "Calendar", icon: CalendarDays },
   { to: "/tests", label: "Tests", icon: ClipboardCheck },
   { to: "/roadmap", label: "Roadmap", icon: Map },
+  { to: "/coach", label: "Coach", icon: Sparkles },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -53,7 +55,7 @@ const MOBILE_NAV: NavItem[] = [
   { to: "/timer", label: "Timer", icon: Timer },
   { to: "/tasks", label: "Tasks", icon: ListTodo },
   { to: "/goals", label: "Goals", icon: Target },
-  { to: "/analytics", label: "Stats", icon: BarChart3 },
+  { to: "/coach", label: "Coach", icon: Sparkles },
 ];
 
 function useIsActive(to: string) {
@@ -85,7 +87,7 @@ function AuthenticatedShell() {
             CENTER
           </div>
           <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-            AIR 1 · IIT Delhi
+            Panav Kansal · AIR 1 · IIT Delhi
           </div>
         </div>
 
