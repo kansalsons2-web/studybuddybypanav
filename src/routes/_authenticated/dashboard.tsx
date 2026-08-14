@@ -21,6 +21,7 @@ import {
   weekStart,
 } from "@/lib/jee-utils";
 import { Bar, Empty, PageHeader, Pill, Stat } from "@/components/jee/ui";
+import { OWNER_NAME, quoteOfTheDay } from "@/lib/quotes";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -53,11 +54,12 @@ function DashboardPage() {
   const maxDay = Math.max(60, ...series.map((d) => d.minutes));
   const mainsDays = daysTo(profile.mains_date);
   const advDays = daysTo(profile.advanced_date);
+  const dailyQuote = quoteOfTheDay();
 
   return (
     <>
       <PageHeader
-        title={`Welcome${profile.name ? `, ${profile.name}` : ""}`}
+        title={`Welcome, ${profile.name || OWNER_NAME}`}
         subtitle={new Date().toLocaleDateString("en-US", {
           weekday: "long",
           month: "long",
@@ -70,6 +72,18 @@ function DashboardPage() {
           </Button>
         </Link>
       </PageHeader>
+
+      {/* Daily motivation */}
+      <Link
+        to="/coach"
+        className="mb-6 block rounded-2xl border border-primary/25 bg-gradient-to-r from-primary/10 to-accent/10 p-4 transition-colors hover:border-primary/50"
+      >
+        <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+          Coach · Quote of the day
+        </div>
+        <p className="mt-1.5 text-sm font-medium text-foreground">“{dailyQuote.text}”</p>
+        <p className="mt-1 text-xs text-muted-foreground">— {dailyQuote.author}</p>
+      </Link>
 
       {/* Mission countdown */}
       <div className="mission-gradient relative mb-6 overflow-hidden rounded-2xl p-6">
