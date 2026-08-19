@@ -141,16 +141,20 @@ function TimerPage() {
     .reduce((a, s) => a + s.duration_minutes, 0);
 
   async function stop() {
+    const total = Math.round(compute() / 60);
     setRunning(false);
-    if (mins >= 1) {
+    state.current = { base: compute(), startedAt: null };
+    if (total >= 1) {
       await jee.addSession({
         study_date: tdy,
-        duration_minutes: mins,
+        duration_minutes: total,
         subject,
         topic: topic.trim() || "General",
         study_type: type,
       });
-      setSeconds(0);
+      reset();
+    } else {
+      persist();
     }
   }
 
@@ -200,11 +204,11 @@ function TimerPage() {
               </div>
               <div className="mt-6 flex justify-center gap-3">
                 {!running ? (
-                  <Button size="lg" onClick={() => setRunning(true)} className="h-12 px-6">
+                  <Button size="lg" onClick={start} className="h-12 px-6">
                     <Play className="mr-1.5 size-4" /> Start
                   </Button>
                 ) : (
-                  <Button size="lg" variant="outline" onClick={() => setRunning(false)} className="h-12 px-6">
+                  <Button size="lg" variant="outline" onClick={pause} className="h-12 px-6">
                     <Pause className="mr-1.5 size-4" /> Pause
                   </Button>
                 )}
