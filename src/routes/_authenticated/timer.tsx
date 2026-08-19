@@ -32,6 +32,8 @@ export const Route = createFileRoute("/_authenticated/timer")({
   }),
 });
 
+const STORAGE_KEY = "jee.timer.v1";
+
 const fieldClass =
   "h-11 w-full rounded-xl border border-border bg-input px-3.5 text-sm text-foreground outline-none transition-colors focus:border-accent";
 
@@ -46,16 +48,91 @@ function TimerPage() {
   const [type, setType] = useState("Lecture");
   const [manualOpen, setManualOpen] = useState(false);
   const ref = useRef<ReturnType<typeof setInterval> | null>(null);
+  // { base: accumulated seconds, startedAt: epoch ms | null }
+  const state = useRef<{ base: number; startedAt: number | null }>({ base: 0, startedAt: null });
 
-  useEffect(() => {
-    if (running) {
-      ref.current = setInterval(() => setSeconds((s) => s + 1), 1000);
+  const compute = () => {
+    const { base, startedAt } = state.current;
+    return base + (startedAt ? Math.floor((Date.now() - startedAt) / 1000) : 0);
+  };
+
+  const persist = () => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...state.current, subject, topic, type }));
+    } catch {
+      /* ignore */
     }
+  };
+
+  // Restore any timer that was running before reload / backgrounding.
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as {
+        base?: number;
+        startedAt?: number | null;
+        subject?: string;
+        topic?: string;
+        type?: string;
+      };
+      state.current = { base: saved.base ?? 0, startedAt: saved.startedAt ?? null };
+      if (saved.subject) setSubject(saved.subject);
+      if (saved.topic) setTopic(saved.topic);
+      if (saved.type) setType(saved.type);
+      setSeconds(compute());
+      setRunning(Boolean(saved.startedAt));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  // Tick from wall-clock time so throttled/background tabs stay accurate.
+  useEffect(() => {
+    if (!running) return;
+    const tick = () => setSeconds(compute());
+    tick();
+    ref.current = setInterval(tick, 1000);
+    const onVisible = () => tick();
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
     return () => {
       if (ref.current) clearInterval(ref.current);
       ref.current = null;
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
     };
   }, [running]);
+
+  function start() {
+    state.current = { base: state.current.base, startedAt: Date.now() };
+    setRunning(true);
+    persist();
+  }
+
+  function pause() {
+    state.current = { base: compute(), startedAt: null };
+    setSeconds(state.current.base);
+    setRunning(false);
+    persist();
+  }
+
+  function reset() {
+    state.current = { base: 0, startedAt: null };
+    setSeconds(0);
+    setRunning(false);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  // Keep meta fields in sync with storage while a session is live.
+  useEffect(() => {
+    if (state.current.startedAt || state.current.base > 0) persist();
+     
+  }, [subject, topic, type]);
 
   const mins = Math.round(seconds / 60);
   const tdy = today();
@@ -64,16 +141,20 @@ function TimerPage() {
     .reduce((a, s) => a + s.duration_minutes, 0);
 
   async function stop() {
+    const total = Math.round(compute() / 60);
     setRunning(false);
-    if (mins >= 1) {
+    state.current = { base: compute(), startedAt: null };
+    if (total >= 1) {
       await jee.addSession({
         study_date: tdy,
-        duration_minutes: mins,
+        duration_minutes: total,
         subject,
         topic: topic.trim() || "General",
         study_type: type,
       });
-      setSeconds(0);
+      reset();
+    } else {
+      persist();
     }
   }
 
@@ -123,11 +204,11 @@ function TimerPage() {
               </div>
               <div className="mt-6 flex justify-center gap-3">
                 {!running ? (
-                  <Button size="lg" onClick={() => setRunning(true)} className="h-12 px-6">
+                  <Button size="lg" onClick={start} className="h-12 px-6">
                     <Play className="mr-1.5 size-4" /> Start
                   </Button>
                 ) : (
-                  <Button size="lg" variant="outline" onClick={() => setRunning(false)} className="h-12 px-6">
+                  <Button size="lg" variant="outline" onClick={pause} className="h-12 px-6">
                     <Pause className="mr-1.5 size-4" /> Pause
                   </Button>
                 )}
