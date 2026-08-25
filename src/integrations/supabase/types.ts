@@ -88,33 +88,45 @@ export type Database = {
       }
       study_sessions: {
         Row: {
+          chapter: string
           created_at: string
           duration_minutes: number
           id: string
+          notes: string
+          session_goal: string
           study_date: string
           study_type: string
           subject: string
           topic: string
+          topic_key: string
           user_id: string
         }
         Insert: {
+          chapter?: string
           created_at?: string
           duration_minutes?: number
           id?: string
+          notes?: string
+          session_goal?: string
           study_date?: string
           study_type?: string
           subject?: string
           topic?: string
+          topic_key?: string
           user_id: string
         }
         Update: {
+          chapter?: string
           created_at?: string
           duration_minutes?: number
           id?: string
+          notes?: string
+          session_goal?: string
           study_date?: string
           study_type?: string
           subject?: string
           topic?: string
+          topic_key?: string
           user_id?: string
         }
         Relationships: []
@@ -193,6 +205,102 @@ export type Database = {
           score?: number
           test_date?: string
           test_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          created_at: string
+          daily_hours: number
+          exam_focus: string
+          onboarding_complete: boolean
+          prep_level: string
+          strongest_subject: string
+          target_branch: string
+          target_percentile: number
+          updated_at: string
+          user_id: string
+          weakest_subject: string
+        }
+        Insert: {
+          created_at?: string
+          daily_hours?: number
+          exam_focus?: string
+          onboarding_complete?: boolean
+          prep_level?: string
+          strongest_subject?: string
+          target_branch?: string
+          target_percentile?: number
+          updated_at?: string
+          user_id: string
+          weakest_subject?: string
+        }
+        Update: {
+          created_at?: string
+          daily_hours?: number
+          exam_focus?: string
+          onboarding_complete?: boolean
+          prep_level?: string
+          strongest_subject?: string
+          target_branch?: string
+          target_percentile?: number
+          updated_at?: string
+          user_id?: string
+          weakest_subject?: string
+        }
+        Relationships: []
+      }
+      user_topic_progress: {
+        Row: {
+          attempts: number
+          chapter_key: string
+          correct: number
+          created_at: string
+          id: string
+          last_revised: string | null
+          last_studied: string | null
+          minutes_spent: number
+          revision_count: number
+          status: string
+          subject: string
+          theory_done: boolean
+          topic_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          chapter_key?: string
+          correct?: number
+          created_at?: string
+          id?: string
+          last_revised?: string | null
+          last_studied?: string | null
+          minutes_spent?: number
+          revision_count?: number
+          status?: string
+          subject?: string
+          theory_done?: boolean
+          topic_key: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          chapter_key?: string
+          correct?: number
+          created_at?: string
+          id?: string
+          last_revised?: string | null
+          last_studied?: string | null
+          minutes_spent?: number
+          revision_count?: number
+          status?: string
+          subject?: string
+          theory_done?: boolean
+          topic_key?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
