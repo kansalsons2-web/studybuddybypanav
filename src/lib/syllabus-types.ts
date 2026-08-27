@@ -1,19 +1,17 @@
-// Client-safe types for the syllabus + preferences layer.
+// Client-safe types for the chapter checklist + preferences layer.
 
-export type TopicProgress = {
+export type ChapterProgress = {
   id: string;
   user_id: string;
-  topic_key: string;
-  subject: string;
   chapter_key: string;
-  status: string;
-  theory_done: boolean;
-  attempts: number;
-  correct: number;
-  minutes_spent: number;
-  revision_count: number;
-  last_studied: string | null;
-  last_revised: string | null;
+  subject: string;
+  class_level: string;
+  notes_done: boolean;
+  lectures_done: boolean;
+  dpp_done: boolean;
+  module_done: boolean;
+  revision_done: boolean;
+  last_updated: string | null;
   created_at?: string;
   updated_at?: string;
 };
@@ -33,7 +31,7 @@ export type UserPreferences = {
 };
 
 export type SyllabusState = {
-  progress: TopicProgress[];
+  progress: ChapterProgress[];
   preferences: UserPreferences;
 };
 
@@ -63,12 +61,14 @@ export const BRANCHES = [
 ] as const;
 
 export type PreferencesInput = Omit<UserPreferences, "user_id" | "created_at" | "updated_at">;
-export type TopicProgressInput = {
-  topic_key: string;
-  subject: string;
+
+export type ChapterProgressInput = {
   chapter_key: string;
-  status?: string;
-  theory_done?: boolean;
-  add_minutes?: number;
-  mark_revised?: boolean;
+  subject: string;
+  class_level: string;
+  notes_done?: boolean;
+  lectures_done?: boolean;
+  dpp_done?: boolean;
+  module_done?: boolean;
+  revision_done?: boolean;
 };
