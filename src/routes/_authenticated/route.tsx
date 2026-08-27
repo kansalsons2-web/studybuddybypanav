@@ -8,6 +8,8 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import {
   BarChart3,
+  BookMarked,
+  CalendarClock,
   CalendarDays,
   ClipboardCheck,
   LayoutDashboard,
@@ -22,6 +24,8 @@ import {
 } from "lucide-react";
 
 import { jeeQueryOptions } from "@/lib/jee-hooks";
+import { syllabusQueryOptions } from "@/lib/syllabus-hooks";
+import { timetableQueryOptions } from "@/lib/timetable-hooks";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -31,7 +35,12 @@ export const Route = createFileRoute("/_authenticated")({
     if (error || !data.user) throw redirect({ to: "/auth" });
     return { user: data.user };
   },
-  loader: ({ context }) => context.queryClient.ensureQueryData(jeeQueryOptions),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(jeeQueryOptions),
+      context.queryClient.ensureQueryData(syllabusQueryOptions),
+      context.queryClient.ensureQueryData(timetableQueryOptions),
+    ]),
   component: AuthenticatedShell,
 });
 
@@ -40,6 +49,8 @@ type NavItem = { to: string; label: string; icon: LucideIcon };
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/timer", label: "Study Timer", icon: Timer },
+  { to: "/syllabus", label: "Syllabus", icon: BookMarked },
+  { to: "/timetable", label: "Timetable", icon: CalendarClock },
   { to: "/tasks", label: "Tasks", icon: ListTodo },
   { to: "/goals", label: "Goals", icon: Target },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
@@ -54,7 +65,7 @@ const MOBILE_NAV: NavItem[] = [
   { to: "/dashboard", label: "Home", icon: LayoutDashboard },
   { to: "/timer", label: "Timer", icon: Timer },
   { to: "/tasks", label: "Tasks", icon: ListTodo },
-  { to: "/goals", label: "Goals", icon: Target },
+  { to: "/syllabus", label: "Syllabus", icon: BookMarked },
   { to: "/coach", label: "Coach", icon: Sparkles },
 ];
 
@@ -91,7 +102,7 @@ function AuthenticatedShell() {
           </div>
         </div>
 
-        <nav className="flex flex-1 flex-col gap-1 px-3">
+        <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3">
           {NAV.map((item) => (
             <NavLink key={item.to} item={item} />
           ))}
@@ -172,3 +183,4 @@ function MobileNavLink({ item }: { item: NavItem }) {
     </Link>
   );
 }
+

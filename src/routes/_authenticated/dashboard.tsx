@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  BookMarked,
+  CalendarClock,
   CalendarDays,
   Flame,
   ListTodo,
@@ -21,6 +23,7 @@ import {
   weekStart,
 } from "@/lib/jee-utils";
 import { Bar, Empty, PageHeader, Pill, Stat } from "@/components/jee/ui";
+import { ScoldBanner } from "@/components/jee/scold-banner";
 import { OWNER_NAME, quoteOfTheDay } from "@/lib/quotes";
 import { Button } from "@/components/ui/button";
 
@@ -73,6 +76,9 @@ function DashboardPage() {
         </Link>
       </PageHeader>
 
+      {/* Accountability nudge — only renders when yesterday's tasks were left unfinished */}
+      <ScoldBanner />
+
       {/* Daily motivation */}
       <Link
         to="/coach"
@@ -81,7 +87,7 @@ function DashboardPage() {
         <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
           Coach · Quote of the day
         </div>
-        <p className="mt-1.5 text-sm font-medium text-foreground">“{dailyQuote.text}”</p>
+        <p className="mt-1.5 text-sm font-medium text-foreground">"{dailyQuote.text}"</p>
         <p className="mt-1 text-xs text-muted-foreground">— {dailyQuote.author}</p>
       </Link>
 
@@ -226,7 +232,9 @@ function DashboardPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <MiniLink to="/syllabus" icon={BookMarked} label="Syllabus" />
+        <MiniLink to="/timetable" icon={CalendarClock} label="Timetable" />
         <MiniLink to="/analytics" icon={TrendingUp} label="Analytics" />
         <MiniLink to="/calendar" icon={CalendarDays} label="Calendar" />
         <MiniLink to="/tests" icon={Flame} label="Mock tests" />
@@ -264,3 +272,4 @@ function MiniLink({
     </Link>
   );
 }
+

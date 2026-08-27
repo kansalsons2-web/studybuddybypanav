@@ -6,6 +6,7 @@ import { useJee } from "@/lib/jee-hooks";
 import { PRIORITIES, SUBJECTS } from "@/lib/jee-types";
 import { today } from "@/lib/jee-utils";
 import { Empty, PageHeader, Pill } from "@/components/jee/ui";
+import { ScoldBanner } from "@/components/jee/scold-banner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -80,6 +81,9 @@ function TasksPage() {
           <Plus className="mr-1.5 size-4" /> Add task
         </Button>
       </PageHeader>
+
+      {/* Accountability nudge — only renders when yesterday's tasks were left unfinished */}
+      <ScoldBanner />
 
       <div className="rounded-2xl border border-border bg-card/40 p-2">
         {dayTasks.length === 0 ? (
@@ -201,3 +205,4 @@ function TasksPage() {
     </>
   );
 }
+
