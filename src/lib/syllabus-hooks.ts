@@ -1,7 +1,12 @@
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { getSyllabusState, savePreferences, setTopicProgress } from "./syllabus.functions";
-import type { PreferencesInput, SyllabusState, TopicProgressInput } from "./syllabus-types";
-import { SYLLABUS, STATUS_WEIGHT } from "./syllabus-data";
+import { getSyllabusState, savePreferences, setChapterProgress } from "./syllabus.functions";
+import type {
+  ChapterProgress,
+  ChapterProgressInput,
+  PreferencesInput,
+  SyllabusState,
+} from "./syllabus-types";
+import { CHAPTERS, CHECK_FIELDS } from "./syllabus-data";
 
 export const syllabusQueryOptions = queryOptions({
   queryKey: ["syllabus"],
@@ -14,17 +19,17 @@ export function useSyllabus() {
   const invalidate = () => qc.invalidateQueries({ queryKey: ["syllabus"] });
 
   const progressM = useMutation({
-    mutationFn: (v: TopicProgressInput) => setTopicProgress({ data: v }),
+    mutationFn: (v: ChapterProgressInput) => setChapterProgress({ data: v }),
   });
   const prefsM = useMutation({ mutationFn: (v: PreferencesInput) => savePreferences({ data: v }) });
 
   const state = data as SyllabusState;
-  const byTopic = new Map(state.progress.map((p) => [p.topic_key, p]));
+  const byChapter = new Map(state.progress.map((p) => [p.chapter_key, p]));
 
   return {
     ...state,
-    byTopic,
-    setTopicProgress: async (v: TopicProgressInput) => {
+    byChapter,
+    setChapterProgress: async (v: ChapterProgressInput) => {
       await progressM.mutateAsync(v);
       await invalidate();
     },
@@ -35,16 +40,26 @@ export function useSyllabus() {
   };
 }
 
-/** Completion 0-1 for a set of topic keys, from status weights. */
-export function completionFor(keys: string[], byTopic: Map<string, { status: string }>) {
-  if (keys.length === 0) return 0;
-  const sum = keys.reduce((a, k) => a + (STATUS_WEIGHT[byTopic.get(k)?.status ?? ""] ?? 0), 0);
-  return sum / keys.length;
+/** Fraction 0-1 of the 5 checkboxes done for one chapter. */
+export function chapterCompletion(row: ChapterProgress | undefined) {
+  if (!row) return 0;
+  const done = CHECK_FIELDS.filter((f) => row[f.key]).length;
+  return done / CHECK_FIELDS.length;
 }
 
-export function subjectCompletion(byTopic: Map<string, { status: string }>) {
-  return SYLLABUS.map((s) => {
-    const keys = s.chapters.flatMap((c) => c.topics.map((t) => t.key));
-    return { subject: s.name, pct: Math.round(completionFor(keys, byTopic) * 100), total: keys.length };
+export function completionFor(keys: string[], byChapter: Map<string, ChapterProgress>) {
+  if (keys.length === 0) return 0;
+  return keys.reduce((a, k) => a + chapterCompletion(byChapter.get(k)), 0) / keys.length;
+}
+
+export function subjectCompletion(byChapter: Map<string, ChapterProgress>) {
+  const subjects = [...new Set(CHAPTERS.map((c) => c.subject))];
+  return subjects.map((subject) => {
+    const keys = CHAPTERS.filter((c) => c.subject === subject).map((c) => c.key);
+    return {
+      subject,
+      pct: Math.round(completionFor(keys, byChapter) * 100),
+      total: keys.length,
+    };
   });
 }
