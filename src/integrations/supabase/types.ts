@@ -44,6 +44,65 @@ export type Database = {
         }
         Relationships: []
       }
+      mock_sections: {
+        Row: {
+          calculation_errors: number
+          conceptual_errors: number
+          correct: number
+          created_at: string
+          id: string
+          incorrect: number
+          silly_mistakes: number
+          subject: string
+          test_id: string
+          time_management_errors: number
+          time_minutes: number
+          unanswered: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          calculation_errors?: number
+          conceptual_errors?: number
+          correct?: number
+          created_at?: string
+          id?: string
+          incorrect?: number
+          silly_mistakes?: number
+          subject: string
+          test_id: string
+          time_management_errors?: number
+          time_minutes?: number
+          unanswered?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          calculation_errors?: number
+          conceptual_errors?: number
+          correct?: number
+          created_at?: string
+          id?: string
+          incorrect?: number
+          silly_mistakes?: number
+          subject?: string
+          test_id?: string
+          time_management_errors?: number
+          time_minutes?: number
+          unanswered?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_sections_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           advanced_date: string
@@ -171,10 +230,12 @@ export type Database = {
         Row: {
           chemistry: number
           created_at: string
+          estimated_rank: number | null
           id: string
           mathematics: number
           max_marks: number
           name: string
+          percentile: number | null
           physics: number
           score: number
           test_date: string
@@ -184,10 +245,12 @@ export type Database = {
         Insert: {
           chemistry?: number
           created_at?: string
+          estimated_rank?: number | null
           id?: string
           mathematics?: number
           max_marks?: number
           name: string
+          percentile?: number | null
           physics?: number
           score?: number
           test_date?: string
@@ -197,10 +260,12 @@ export type Database = {
         Update: {
           chemistry?: number
           created_at?: string
+          estimated_rank?: number | null
           id?: string
           mathematics?: number
           max_marks?: number
           name?: string
+          percentile?: number | null
           physics?: number
           score?: number
           test_date?: string
@@ -280,6 +345,54 @@ export type Database = {
         }
         Relationships: []
       }
+      user_chapter_progress: {
+        Row: {
+          chapter_key: string
+          class_level: string
+          created_at: string
+          dpp_done: boolean
+          id: string
+          last_updated: string
+          lectures_done: boolean
+          module_done: boolean
+          notes_done: boolean
+          revision_done: boolean
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chapter_key: string
+          class_level: string
+          created_at?: string
+          dpp_done?: boolean
+          id?: string
+          last_updated?: string
+          lectures_done?: boolean
+          module_done?: boolean
+          notes_done?: boolean
+          revision_done?: boolean
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chapter_key?: string
+          class_level?: string
+          created_at?: string
+          dpp_done?: boolean
+          id?: string
+          last_updated?: string
+          lectures_done?: boolean
+          module_done?: boolean
+          notes_done?: boolean
+          revision_done?: boolean
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           created_at: string
@@ -319,60 +432,6 @@ export type Database = {
           updated_at?: string
           user_id?: string
           weakest_subject?: string
-        }
-        Relationships: []
-      }
-      user_topic_progress: {
-        Row: {
-          attempts: number
-          chapter_key: string
-          correct: number
-          created_at: string
-          id: string
-          last_revised: string | null
-          last_studied: string | null
-          minutes_spent: number
-          revision_count: number
-          status: string
-          subject: string
-          theory_done: boolean
-          topic_key: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          attempts?: number
-          chapter_key?: string
-          correct?: number
-          created_at?: string
-          id?: string
-          last_revised?: string | null
-          last_studied?: string | null
-          minutes_spent?: number
-          revision_count?: number
-          status?: string
-          subject?: string
-          theory_done?: boolean
-          topic_key: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          attempts?: number
-          chapter_key?: string
-          correct?: number
-          created_at?: string
-          id?: string
-          last_revised?: string | null
-          last_studied?: string | null
-          minutes_spent?: number
-          revision_count?: number
-          status?: string
-          subject?: string
-          theory_done?: boolean
-          topic_key?: string
-          updated_at?: string
-          user_id?: string
         }
         Relationships: []
       }

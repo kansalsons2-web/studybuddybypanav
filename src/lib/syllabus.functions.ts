@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import type { SyllabusState, TopicProgress, UserPreferences } from "./syllabus-types";
+import type { ChapterProgress, SyllabusState, UserPreferences } from "./syllabus-types";
 import { DEFAULT_PREFERENCES } from "./syllabus-types";
 
 export const getSyllabusState = createServerFn({ method: "GET" })
@@ -9,59 +9,58 @@ export const getSyllabusState = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     const [p, pref] = await Promise.all([
-      supabase.from("user_topic_progress").select("*"),
+      supabase.from("user_chapter_progress").select("*"),
       supabase.from("user_preferences").select("*").eq("user_id", userId).maybeSingle(),
     ]);
     const state: SyllabusState = {
-      progress: (p.data as TopicProgress[] | null) ?? [],
+      progress: (p.data as ChapterProgress[] | null) ?? [],
       preferences:
         (pref.data as UserPreferences | null) ?? { ...DEFAULT_PREFERENCES, user_id: userId },
     };
     return state;
   });
 
-export const setTopicProgress = createServerFn({ method: "POST" })
+export const setChapterProgress = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) =>
     z
       .object({
-        topic_key: z.string().min(1),
+        chapter_key: z.string().min(1),
         subject: z.string(),
-        chapter_key: z.string(),
-        status: z.string().optional(),
-        theory_done: z.boolean().optional(),
-        add_minutes: z.number().optional(),
-        mark_revised: z.boolean().optional(),
+        class_level: z.string(),
+        notes_done: z.boolean().optional(),
+        lectures_done: z.boolean().optional(),
+        dpp_done: z.boolean().optional(),
+        module_done: z.boolean().optional(),
+        revision_done: z.boolean().optional(),
       })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const { data: existing } = await supabase
-      .from("user_topic_progress")
+      .from("user_chapter_progress")
       .select("*")
       .eq("user_id", userId)
-      .eq("topic_key", data.topic_key)
+      .eq("chapter_key", data.chapter_key)
       .maybeSingle();
-
-    const prev = existing as TopicProgress | null;
-    const todayIso = new Date().toISOString().slice(0, 10);
+    const prev = existing as ChapterProgress | null;
 
     const row = {
       user_id: userId,
-      topic_key: data.topic_key,
-      subject: data.subject,
       chapter_key: data.chapter_key,
-      status: data.status ?? prev?.status ?? "Not Started",
-      theory_done: data.theory_done ?? prev?.theory_done ?? false,
-      minutes_spent: (prev?.minutes_spent ?? 0) + (data.add_minutes ?? 0),
-      revision_count: (prev?.revision_count ?? 0) + (data.mark_revised ? 1 : 0),
-      last_studied: data.add_minutes ? todayIso : (prev?.last_studied ?? null),
-      last_revised: data.mark_revised ? todayIso : (prev?.last_revised ?? null),
+      subject: data.subject,
+      class_level: data.class_level,
+      notes_done: data.notes_done ?? prev?.notes_done ?? false,
+      lectures_done: data.lectures_done ?? prev?.lectures_done ?? false,
+      dpp_done: data.dpp_done ?? prev?.dpp_done ?? false,
+      module_done: data.module_done ?? prev?.module_done ?? false,
+      revision_done: data.revision_done ?? prev?.revision_done ?? false,
+      last_updated: new Date().toISOString().slice(0, 10),
       updated_at: new Date().toISOString(),
     };
 
-    await supabase.from("user_topic_progress").upsert(row, { onConflict: "user_id,topic_key" });
+    await supabase.from("user_chapter_progress").upsert(row, { onConflict: "user_id,chapter_key" });
     return { ok: true };
   });
 
