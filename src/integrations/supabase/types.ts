@@ -209,6 +209,77 @@ export type Database = {
         }
         Relationships: []
       }
+      timetable_completions: {
+        Row: {
+          completion_date: string
+          created_at: string
+          done: boolean
+          id: string
+          slot_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completion_date?: string
+          created_at?: string
+          done?: boolean
+          id?: string
+          slot_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completion_date?: string
+          created_at?: string
+          done?: boolean
+          id?: string
+          slot_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timetable_completions_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "timetable_slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timetable_slots: {
+        Row: {
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: string
+          label: string
+          start_time: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          id?: string
+          label?: string
+          start_time: string
+          subject?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          label?: string
+          start_time?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           created_at: string
