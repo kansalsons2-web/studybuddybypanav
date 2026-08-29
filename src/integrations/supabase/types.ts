@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.17"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -226,50 +226,121 @@ export type Database = {
         }
         Relationships: []
       }
+      test_question_tags: {
+        Row: {
+          created_at: string
+          id: string
+          note: string
+          question_number: number
+          subject: string
+          tag: string
+          test_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string
+          question_number?: number
+          subject?: string
+          tag: string
+          test_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string
+          question_number?: number
+          subject?: string
+          tag?: string
+          test_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_question_tags_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tests: {
         Row: {
           chemistry: number
+          chemistry_correct: number
+          chemistry_incorrect: number
+          chemistry_unanswered: number
           created_at: string
           estimated_rank: number | null
           id: string
           mathematics: number
+          mathematics_correct: number
+          mathematics_incorrect: number
+          mathematics_unanswered: number
           max_marks: number
           name: string
           percentile: number | null
           physics: number
+          physics_correct: number
+          physics_incorrect: number
+          physics_unanswered: number
           score: number
           test_date: string
           test_type: string
+          time_taken_minutes: number | null
           user_id: string
         }
         Insert: {
           chemistry?: number
+          chemistry_correct?: number
+          chemistry_incorrect?: number
+          chemistry_unanswered?: number
           created_at?: string
           estimated_rank?: number | null
           id?: string
           mathematics?: number
+          mathematics_correct?: number
+          mathematics_incorrect?: number
+          mathematics_unanswered?: number
           max_marks?: number
           name: string
           percentile?: number | null
           physics?: number
+          physics_correct?: number
+          physics_incorrect?: number
+          physics_unanswered?: number
           score?: number
           test_date?: string
           test_type?: string
+          time_taken_minutes?: number | null
           user_id: string
         }
         Update: {
           chemistry?: number
+          chemistry_correct?: number
+          chemistry_incorrect?: number
+          chemistry_unanswered?: number
           created_at?: string
           estimated_rank?: number | null
           id?: string
           mathematics?: number
+          mathematics_correct?: number
+          mathematics_incorrect?: number
+          mathematics_unanswered?: number
           max_marks?: number
           name?: string
           percentile?: number | null
           physics?: number
+          physics_correct?: number
+          physics_incorrect?: number
+          physics_unanswered?: number
           score?: number
           test_date?: string
           test_type?: string
+          time_taken_minutes?: number | null
           user_id?: string
         }
         Relationships: []
