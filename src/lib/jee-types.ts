@@ -60,7 +60,20 @@ export type Test = {
   chemistry: number;
   mathematics: number;
   created_at: string;
+  percentile?: number | null;
+  estimated_rank?: number | null;
+  time_taken_minutes?: number | null;
+  physics_correct?: number;
+  physics_incorrect?: number;
+  physics_unanswered?: number;
+  chemistry_correct?: number;
+  chemistry_incorrect?: number;
+  chemistry_unanswered?: number;
+  mathematics_correct?: number;
+  mathematics_incorrect?: number;
+  mathematics_unanswered?: number;
 };
+
 
 export type JeeData = {
   profile: Profile;
@@ -121,4 +134,16 @@ export type TestInput = {
   physics: number;
   chemistry: number;
   mathematics: number;
+  percentile?: number | null;
+  estimated_rank?: number | null;
+  time_taken_minutes?: number | null;
+  physics_correct?: number;
+  physics_incorrect?: number;
+  physics_unanswered?: number;
+  chemistry_correct?: number;
+  chemistry_incorrect?: number;
+  chemistry_unanswered?: number;
+  mathematics_correct?: number;
+  mathematics_incorrect?: number;
+  mathematics_unanswered?: number;
 };

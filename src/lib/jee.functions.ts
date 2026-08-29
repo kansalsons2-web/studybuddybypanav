@@ -172,9 +172,22 @@ export const addTest = createServerFn({ method: "POST" })
         physics: z.number(),
         chemistry: z.number(),
         mathematics: z.number(),
+        percentile: z.number().nullable().optional(),
+        estimated_rank: z.number().nullable().optional(),
+        time_taken_minutes: z.number().nullable().optional(),
+        physics_correct: z.number().optional(),
+        physics_incorrect: z.number().optional(),
+        physics_unanswered: z.number().optional(),
+        chemistry_correct: z.number().optional(),
+        chemistry_incorrect: z.number().optional(),
+        chemistry_unanswered: z.number().optional(),
+        mathematics_correct: z.number().optional(),
+        mathematics_incorrect: z.number().optional(),
+        mathematics_unanswered: z.number().optional(),
       })
       .parse(data),
   )
+
   .handler(async ({ data, context }) => {
     await context.supabase.from("tests").insert({ user_id: context.userId, ...data });
     return { ok: true };
