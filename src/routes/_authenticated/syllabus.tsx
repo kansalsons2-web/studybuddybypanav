@@ -2,22 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 
-import { useSyllabus, subjectCompletion, completionFor } from "@/lib/syllabus-hooks";
-import { SYLLABUS, SYLLABUS_VERSION, TOPIC_STATUSES, TOPIC_COUNT } from "@/lib/syllabus-data";
+import { useSyllabus, subjectCompletion, chapterCompletion } from "@/lib/syllabus-hooks";
+import {
+  CHAPTERS,
+  CHAPTER_COUNT,
+  CHECK_FIELDS,
+  CLASS_LEVELS,
+  SYLLABUS_VERSION,
+  SUBJECTS,
+  type ClassLevel,
+} from "@/lib/syllabus-data";
 import { Bar, PageHeader, Pill } from "@/components/jee/ui";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export const Route = createFileRoute("/_authenticated/syllabus")({
   component: SyllabusPage,
@@ -26,35 +21,40 @@ export const Route = createFileRoute("/_authenticated/syllabus")({
       { title: "Syllabus · JEE Command Center" },
       {
         name: "description",
-        content: "Track every chapter and topic of the JEE syllabus to completion.",
+        content: "Chapter-wise JEE syllabus checklist: notes, lectures, DPPs, modules, revision.",
+      },
+      { property: "og:title", content: "Syllabus · JEE Command Center" },
+      {
+        property: "og:description",
+        content: "Track every JEE chapter across notes, lectures, DPPs, modules and revision.",
       },
     ],
   }),
 });
 
-const STATUS_TONE: Record<string, "default" | "gold" | "teal" | "danger"> = {
-  "Not Started": "default",
-  Learning: "teal",
-  Practicing: "teal",
-  "Needs Revision": "danger",
-  Strong: "gold",
-  Mastered: "gold",
-};
+type Filter = ClassLevel | "All";
 
 function SyllabusPage() {
   const syllabus = useSyllabus();
-  const [activeSubject, setActiveSubject] = useState(SYLLABUS[0]!.name);
+  const [activeSubject, setActiveSubject] = useState<string>(SUBJECTS[0]);
+  const [filter, setFilter] = useState<Filter>("All");
 
-  const bySubject = subjectCompletion(syllabus.byTopic);
-  const overallDone = bySubject.reduce((a, s) => a + Math.round((s.pct / 100) * s.total), 0);
+  const bySubject = subjectCompletion(syllabus.byChapter);
+  const overallPct = Math.round(
+    (CHAPTERS.reduce((a, c) => a + chapterCompletion(syllabus.byChapter.get(c.key)), 0) /
+      CHAPTER_COUNT) *
+      100,
+  );
 
-  const subject = SYLLABUS.find((s) => s.name === activeSubject)!;
+  const chapters = CHAPTERS.filter(
+    (c) => c.subject === activeSubject && (filter === "All" || c.classLevel === filter),
+  );
 
   return (
     <>
       <PageHeader
         title="Syllabus"
-        subtitle={`${overallDone}/${TOPIC_COUNT} topics tracked · ${SYLLABUS_VERSION}`}
+        subtitle={`${CHAPTER_COUNT} chapters · ${overallPct}% complete · ${SYLLABUS_VERSION}`}
       />
 
       <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -70,80 +70,83 @@ function SyllabusPage() {
           >
             <div className="flex items-center justify-between">
               <span className="font-display text-sm font-semibold text-foreground">{s.subject}</span>
-              <span className="font-display text-lg font-bold tabular-nums text-accent">{s.pct}%</span>
+              <span className="font-display text-lg font-bold tabular-nums text-accent">
+                {s.pct}%
+              </span>
             </div>
             <div className="mt-2">
               <Bar value={s.pct} max={100} />
             </div>
-            <div className="mt-1.5 text-xs text-muted-foreground">{s.total} topics</div>
+            <div className="mt-1.5 text-xs text-muted-foreground">{s.total} chapters</div>
           </button>
         ))}
       </div>
 
-      <Accordion type="multiple" className="rounded-2xl border border-border bg-card/40 px-4">
-        {subject.chapters.map((chapter) => {
-          const keys = chapter.topics.map((t) => t.key);
-          const pct = Math.round(completionFor(keys, syllabus.byTopic) * 100);
+      <div className="mb-4 flex flex-wrap gap-2">
+        {(["All", ...CLASS_LEVELS] as Filter[]).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+              filter === f
+                ? "border-primary bg-primary/15 text-primary"
+                : "border-border text-muted-foreground hover:border-primary/40"
+            }`}
+          >
+            {f}
+          </button>
+        ))}
+      </div>
+
+      <div className="space-y-3">
+        {chapters.map((c) => {
+          const row = syllabus.byChapter.get(c.key);
+          const pct = Math.round(chapterCompletion(row) * 100);
           return (
-            <AccordionItem key={chapter.key} value={chapter.key}>
-              <AccordionTrigger>
-                <div className="flex flex-1 items-center justify-between gap-3 pr-3">
-                  <span className="text-left text-foreground">{chapter.name}</span>
-                  <span className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className="hidden w-16 sm:inline-block">
-                      <Bar value={pct} max={100} />
-                    </span>
-                    {pct}%
-                  </span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent>
-                <ul className="space-y-2">
-                  {chapter.topics.map((topic) => {
-                    const status = syllabus.byTopic.get(topic.key)?.status ?? "Not Started";
-                    return (
-                      <li
-                        key={topic.key}
-                        className="flex flex-wrap items-center gap-3 rounded-xl bg-secondary/40 px-3 py-2.5"
-                      >
-                        <span className="min-w-0 flex-1 text-sm text-foreground">{topic.name}</span>
-                        <Pill tone={STATUS_TONE[status] ?? "default"}>{status}</Pill>
-                        <Select
-                          value={status}
-                          onValueChange={(v) =>
-                            syllabus.setTopicProgress({
-                              topic_key: topic.key,
-                              subject: subject.name,
-                              chapter_key: chapter.key,
-                              status: v,
-                            })
-                          }
-                        >
-                          <SelectTrigger className="h-8 w-[150px] text-xs">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {TOPIC_STATUSES.map((s) => (
-                              <SelectItem key={s} value={s}>
-                                {s}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
+            <div key={c.key} className="rounded-2xl border border-border bg-card/40 p-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="min-w-0 flex-1 text-sm font-medium text-foreground">{c.name}</span>
+                <Pill tone={c.classLevel === "Class 11" ? "teal" : "gold"}>{c.classLevel}</Pill>
+                <span className="w-20">
+                  <Bar value={pct} max={100} />
+                </span>
+                <span className="w-10 text-right text-xs tabular-nums text-muted-foreground">
+                  {pct}%
+                </span>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {CHECK_FIELDS.map((f) => {
+                  const on = Boolean(row?.[f.key]);
+                  return (
+                    <button
+                      key={f.key}
+                      onClick={() =>
+                        syllabus.setChapterProgress({
+                          chapter_key: c.key,
+                          subject: c.subject,
+                          class_level: c.classLevel,
+                          [f.key]: !on,
+                        })
+                      }
+                      className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                        on
+                          ? "border-accent bg-accent/15 text-accent"
+                          : "border-border text-muted-foreground hover:border-accent/40"
+                      }`}
+                    >
+                      {f.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
-      </Accordion>
+      </div>
 
       <p className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
-        <CheckCircle2 className="size-3.5" /> Progress saves automatically as you update each topic's status.
+        <CheckCircle2 className="size-3.5" /> Progress saves automatically as you tap each chip.
       </p>
     </>
   );
 }
-
