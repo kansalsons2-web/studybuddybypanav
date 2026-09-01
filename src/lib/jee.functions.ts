@@ -175,21 +175,27 @@ export const addTest = createServerFn({ method: "POST" })
         percentile: z.number().nullable().optional(),
         estimated_rank: z.number().nullable().optional(),
         time_taken_minutes: z.number().nullable().optional(),
-        physics_correct: z.number().optional(),
-        physics_incorrect: z.number().optional(),
-        physics_unanswered: z.number().optional(),
-        chemistry_correct: z.number().optional(),
-        chemistry_incorrect: z.number().optional(),
-        chemistry_unanswered: z.number().optional(),
-        mathematics_correct: z.number().optional(),
-        mathematics_incorrect: z.number().optional(),
-        mathematics_unanswered: z.number().optional(),
+        physics_correct: z.number().default(0),
+        physics_incorrect: z.number().default(0),
+        physics_unanswered: z.number().default(0),
+        chemistry_correct: z.number().default(0),
+        chemistry_incorrect: z.number().default(0),
+        chemistry_unanswered: z.number().default(0),
+        mathematics_correct: z.number().default(0),
+        mathematics_incorrect: z.number().default(0),
+        mathematics_unanswered: z.number().default(0),
       })
       .parse(data),
   )
 
   .handler(async ({ data, context }) => {
-    await context.supabase.from("tests").insert({ user_id: context.userId, ...data });
+    await context.supabase.from("tests").insert({
+      user_id: context.userId,
+      ...data,
+      percentile: data.percentile ?? null,
+      estimated_rank: data.estimated_rank ?? null,
+      time_taken_minutes: data.time_taken_minutes ?? null,
+    });
     return { ok: true };
   });
 
